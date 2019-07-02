@@ -1,0 +1,25 @@
+<% include ../header %>
+
+	<div class="container-fluid">
+		<div class="row row-offcanvas row-offcanvas-left">
+			<% include bo_nav %>
+			<main role="main" class="col-sm-12 col-md-9 col-lg-10 ml-sm-auto px-0">
+				<% include bo_nav_mobile %><!-- Nav for small screen sm & xs -->
+				<div id="main-div" style="display:inline-block !important; width:100%;">
+					<h1 class="h2">Dashboard</h1><hr>
+					<div class="btn-toolbar mb-2 mb-md-0">
+						<div class="btn-group mr-2">
+							<button class="btn btn-sm btn-outline-secondary">Share</button>
+							<button class="btn btn-sm btn-outline-secondary">Export</button>
+						</div>
+						<button class="btn btn-sm btn-outline-secondary dropdown-toggle">
+							<span data-feather="calendar"></span>
+							This week
+						</button>
+					</div>
+				</div>
+			</main>
+		</div>
+	</div>
+
+<% include ../footer %>

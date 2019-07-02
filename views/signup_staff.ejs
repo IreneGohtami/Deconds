@@ -1,0 +1,274 @@
+<% include header %>
+	
+	<div class="container" style="padding-top:10px; padding-bottom:10px;">
+		<div class="row">
+			<div class="col-sm-12">
+				<h2>Staff Account <span class="float-right required d-none d-sm-block" style="font-size:14px; margin-top:15px">* Required fields</span></h2>
+				<div class="mt-4"></div>
+				<form id="form_1" method="post" action="/signup/staff" enctype="multipart/form-data">
+					<div class="form-group row">
+						<label for="username" class="col-sm-3 col-form-label">Username <span class="required">*</span></label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="password" class="col-sm-3 col-form-label">Password <span class="required">*</span></label>
+						<div class="col-sm-9">
+							<input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="confirm_password" class="col-sm-3 col-form-label">Confirm Password <span class="required">*</span></label>
+						<div class="col-sm-9">
+							<input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm password" required>
+						</div>
+					</div>
+					<span id="password_error" class="required"></span>
+					<hr>
+					<div class="form-group row">
+						<label for="first_name" class="col-sm-3 col-form-label">First Name <span class="required">*</span></label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name" required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="last_name" class="col-sm-3 col-form-label">Last Name <span class="required">*</span></label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name" required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="email" class="col-sm-3 col-form-label">Email <span class="required">*</span></label>
+						<div class="col-sm-9">
+							<input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="gender" class="col-sm-3 col-form-label">Gender <span class="required">*</span></label>
+						<div class="col-sm-9">
+							<select class="form-control" id="gender" name="gender">
+								<option value="Male">Male</option>
+								<option value="Female">Female</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row" style="margin-bottom:3px;">
+						<div class="input-group date datetimepicker">
+							<div class="col-sm-3 col-form-label">
+								<label for="dob" class="col-form-label">Date of Birth</label>
+							</div>
+							<div class="col-sm-9">
+								<input type="date" class="form-control" id="dob" name="dob">
+							</div>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="phone" class="col-sm-3 col-form-label">Phone <span class="required">*</span></label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="phone" name="phone" placeholder="Mobile/phone number" required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="address" class="col-sm-3 col-form-label">Address</label>
+						<div class="col-sm-9">
+							<textarea class="form-control" row="3" id="address" name="address" placeholder="Residential address" style="height:95px;" required></textarea>
+						</div>
+					</div>
+					<hr>
+					<div class="form-group row">
+						<label for="company_name" class="col-sm-3 col-form-label">Company Name <span class="required">*</span></label>
+						<div class="col-sm-9">
+							<select class="form-control" id="company_name" name="company_name" onchange="loadCompanyData(this)">
+								<option value="">Select your company</option>
+								<% for(var i=0; i<companyList.length; i++){ %>
+									<option company-id="<%- companyList[i]._id %>" value="<%- companyList[i].company_name %>"><%- companyList[i].company_name %></option>
+								<% } %>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="branch" class="col-sm-3 col-form-label">Branch <span class="required">*</span></label>
+						<div class="col-sm-9">
+							<select class="form-control" id="branch" name="branch">
+								<option value="">Select your branch</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="department" class="col-sm-3 col-form-label">Department <span class="required">*</span></label>
+						<div class="col-sm-9">
+							<select class="form-control" id="department" name="department">
+								<option value="">Select department</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="usergroup" class="col-sm-3 col-form-label">User Group <span class="required">*</span></label>
+						<div class="col-sm-9">
+							<select class="form-control" id="usergroup" name="usergroup">
+								<option value="">Select user group</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="hierarchy" class="col-sm-3 col-form-label">Hierarchy <span class="required">*</span></label>
+						<div class="col-sm-9">
+							<select class="form-control" id="hierarchy" name="hierarchy">
+								<option value="">Select hierarchy</option>
+							</select>
+						</div>
+					</div>
+					<button type="button" onclick="validateForm()" class="btn btn-primary btn-md float-right">SIGNUP</button>
+					<br>
+					<div class="py-5">&nbsp;</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<script>
+		$( document ).ready(function() {
+			//$('[data-toggle="tooltip"]').tooltip(); 
+		});
+		
+		function loadCompanyData(obj){
+			var companyId = $(obj).find(':selected').attr('company-id');
+			if(companyId){
+				$('#branch').empty();
+				$('#department').empty();
+				$('#usergroup').empty();
+				$('#hierarchy').empty();
+
+				$.get("/ajax/loadCompanyData/"+companyId, function() { 
+					
+				}).done(function(output) {
+					if(output.branch){
+						var str =  '<option value="">Select your branch</option>';
+						for(var i=0; i<output.branch.length; i++){
+							str += '<option value="'+output.branch[i].branch_name+'">'+output.branch[i].branch_name+'</option>';
+						}
+						$('#branch').append(str);
+
+						var str =  '<option value="">Select your department</option>';
+						for(var i=0; i<output.department.length; i++){
+							str += '<option value="'+output.department[i].department_name+'">'+output.department[i].department_name+'</option>';
+						}
+						$('#department').append(str);
+
+						var str =  '<option value="">Select your user group</option>';
+						for(var i=0; i<output.usergroup.length; i++){
+							str += '<option value="'+output.usergroup[i].usergroup_name+'">'+output.usergroup[i].usergroup_name+'</option>';
+						}
+						$('#usergroup').append(str);
+
+						var str =  '<option value="">Select your hierarchy</option>';
+						for(var i=0; i<output.hierarchy.length; i++){
+							str += '<option value="'+output.hierarchy[i].hierarchy_name+'">'+output.hierarchy[i].hierarchy_name+'</option>';
+						}
+						$('#hierarchy').append(str);
+					}
+				});
+			}
+		}
+
+		function validateUsername(str) {
+			var code, i, len;
+			for (i = 0, len = str.length; i < len; i++) {
+				code = str.charCodeAt(i);
+				if (!(code > 47 && code < 58) && // numeric (0-9)
+					!(code > 64 && code < 91) && // upper alpha (A-Z)
+					!(code > 96 && code < 123) && // lower alpha (a-z)
+					code != 95 && code != 46 && code != 45) { // underscore, period, dash
+					return false;
+				}
+			}
+			return true;
+		}
+
+		function validateForm(){
+			$('#password_error').html('');
+			
+			if($('#username').val() == ''){
+				$('#username').prop('required', true);
+				$('#username').focus();
+				return false;
+			}if(validateUsername($('#username').val()) == false){
+				$('#password_error').html('Username only accepts alphanumeric, underscore, period & dash.');
+				$('#username').prop('required', true);
+				$('#username').focus();
+				return false;
+			}else{ //check for duplicate username
+				$.busyLoadFull("show", {
+					spinner: "circles"
+				});
+				$.get("/checkDuplicateName/users/username/"+$('#username').val(), function() { 
+				
+				}).done(function(output) { //console.log(output);
+					if(output == true){
+						$('#password_error').html('Username already taken.');
+						$('#username').prop('required', true);
+						$('#username').focus();
+						$.busyLoadFull("hide");
+						return false;
+					}
+					else{
+						$.busyLoadFull("hide");
+						if($('#password').val() == ''){
+							$('#password').prop('required', true);
+							$('#password').focus();
+							return false;
+						}if($('#confirm_password').val() == ''){
+							$('#confirm_password').prop('required', true);
+							$('#confirm_password').focus();
+							return false;
+						}if($('#confirm_password').val() != $('#password').val()){
+							$('#password_error').html('Password does not match.');
+							$('#confirm_password').focus();
+							return false;
+						}if($('#first_name').val() == ''){
+							$('#first_name').prop('required', true);
+							$('#first_name').focus();
+							return false;
+						}if($('#last_name').val() == ''){
+							$('#last_name').prop('required', true);
+							$('#last_name').focus();
+							return false;
+						}if($('#email').val() == ''){
+							$('#email').prop('required', true);
+							$('#email').focus();
+							return false;
+						}if($('#company_name').val() == ''){
+							$('#company_name').prop('required', true);
+							$('#company_name').focus();
+							return false;
+						}if($('#phone').val() == ''){
+							$('#phone').prop('required', true);
+							$('#phone').focus();
+							return false;
+						}if($('#branch').val() == ''){
+							$('#branch').prop('required', true);
+							$('#branch').focus();
+							return false;
+						}if($('#department').val() == ''){
+							$('#department').prop('required', true);
+							$('#department').focus();
+							return false;
+						}if($('#usergroup').val() == ''){
+							$('#usergroup').prop('required', true);
+							$('#usergroup').focus();
+							return false;
+						}if($('#hierarchy').val() == ''){
+							$('#hierarchy').prop('required', true);
+							$('#hierarchy').focus();
+							return false;
+						}else{
+							$('#form_1').submit();
+						}
+					}
+				});
+			}
+		}
+	</script>
+	
+<% include footer %>

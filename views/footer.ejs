@@ -1,0 +1,45 @@
+		<!--<footer class="footer bg-dark">
+			<div class="container">
+				Contact us for more info: <span class="glyphicon glyphicon-earphone"></span> 0123456789 | <span class="glyphicon glyphicon-envelope"></span> info@deconds.com
+			</div>
+		</footer>-->
+		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+		<script src="/modules/moment/moment.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+		<script src="/modules/busy-load/dist/app.min.js"></script>
+		<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+		<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+		<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+		<script src='/modules/fullcalendar/core/main.js'></script>
+		<script src='/modules/fullcalendar/daygrid/main.js'></script>
+		<script src='/modules/fullcalendar/timegrid/main.js'></script>
+		<!--<script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>-->
+		<script>
+			$(function () {
+				feather.replace();
+
+				$('[name="timepicker"]').datetimepicker({
+					format: 'HH:mm'
+				});
+			});
+		</script>
+		<script>
+			function slashEscape(contents){
+				return contents
+					.replace(/\\/g, '\\\\')
+					.replace(/"/g, '\\"')
+					.replace(/\n/g, '\\n');
+			}
+			
+			function nl2br(str, is_xhtml){
+				if (typeof str === 'undefined' || str === null) {
+					return '';
+				}
+				var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
+				return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
+			}
+		</script>
+    </body>
+</html>

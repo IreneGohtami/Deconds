@@ -1,0 +1,286 @@
+<% include header %>
+
+	<!--<div id="carousel" class="carousel slide" data-ride="carousel" style="width:100%; height:680px;">
+		<ul class="carousel-indicators">
+			<li data-target="#carousel" data-slide-to="0" class="active"></li>
+			<li data-target="#carousel" data-slide-to="1"></li>
+			<li data-target="#carousel" data-slide-to="2"></li>
+			<li data-target="#carousel" data-slide-to="3"></li>
+			<li data-target="#carousel" data-slide-to="4"></li>
+		</ul>
+		<div class="carousel-inner">
+			<div class="carousel-item active" style="background-image: url(/images/c1.jpg);"></div>
+			<div class="carousel-item" style="background-image: url(/images/c2.jpg);"></div>
+			<div class="carousel-item" style="background-image: url(/images/c3.jpg);"></div>
+			<div class="carousel-item" style="background-image: url(/images/c4.jpg);"></div>
+			<div class="carousel-item" style="background-image: url(/images/c5.jpg);"></div>
+		</div>
+		<a class="carousel-control-prev" href="#carousel" data-slide="prev">
+			<span class="carousel-control-prev-icon"></span>
+		</a>
+		<a class="carousel-control-next" href="#carousel" data-slide="next">
+			<span class="carousel-control-next-icon"></span>
+		</a>-->
+	</div>
+	<div class="container" style="padding-top:10px; padding-bottom:10px;">
+		<div class="row">
+			<div class="col-sm-12">
+				<div style="height:50px;">
+					<% if(companyData.logo){ %>
+						<img class="float-left" src="/uploads/<%- companyData.logo %>" style="height:50px; width:auto;">
+					<% } %>
+					<h3 style="line-height:1.7;">&nbsp;<%- companyData.company_name %></h3>
+				</div>
+				<hr>
+				<b>Contact Us:</b><br>
+				<span data-feather="phone"></span>&nbsp; <%- companyData.phone %><br>
+				<span data-feather="mail"></span>&nbsp; <a href="mailto:<%- companyData.email %>"><%- companyData.email %></a><br>
+				<hr>
+				<div class="col-sm-6" style="padding:0;">
+					<b>Find Us:</b><br>
+					<span data-feather="map-pin"></span>&nbsp; <%- companyData.address.replace(/\n/g, "<br>&emsp;&nbsp; ") %>
+				</div>
+				<div class="col-sm-6" style="padding:0;">
+					
+				</div>
+				<hr>
+
+				<form>
+					<div class="form-group row">
+						<label for="branch" class="col-lg-1 col-md-2 col-sm-3 col-form-label">Branch</label>
+						<div class="col-lg-3 col-md-4 col-sm-9">
+							<select class="form-control" id="branch" name="branch" onchange="listStaff(this.value)">
+								<option value="" selected>Select a branch</option>
+								<% for(var i=0; i<branchList.length; i++){ %>
+									<option value="<%- branchList[i].branch_name %>"><%- branchList[i].branch_name %></option>
+								<% } %>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="staff" class="col-lg-1 col-md-2 col-sm-3 col-form-label">Staff</label>
+						<div class="col-lg-3 col-md-4 col-sm-9">
+							<select class="form-control" id="staff" name="staff" onchange="toggleAppointmentBtn(this.value)">
+								<option value="">Select a staff</option>
+							</select>
+						</div>
+					</div>
+					<button type="button" id="appointment-btn" class="btn btn-primary" onclick="loadStaffSchedule();">Make Appointment</button>
+				</form>
+				<br>
+				<div class="alert alert-success alert-dismissible fade">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					<strong>Success!</strong> Your appointment has been made.
+				</div>
+				<div class="alert alert-danger">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					Please login before you can make an appointment.
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="appointmentModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-md" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modalLabel">Set Appointment Details</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form>
+						<div class="form-group row">
+							<div class="col-sm-6">
+								<label for="a_date" class="col-form-label">Date:</label>
+								<div class="input-group date" id="a_date" data-target-input="nearest">
+									<input type="text" id="appointment_date" name="datepicker" class="form-control datetimepicker-input" data-target="#a_date" value=""/>
+									<div class="input-group-append" data-target="#a_date" data-toggle="datetimepicker">
+										<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+									<label for="appointment_time" class="col-form-label">Time:</label>
+									<select class="form-control" id="appointment_time">
+										<option value="" selected>Select time slot</option>
+									</select>
+								</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-sm-12">
+								<label for="appointment_remarks" class="col-form-label">Remarks:</label>
+								<textarea class="form-control" id="appointment_remarks"></textarea>
+							</div>
+						</div>
+					</form>
+					<span id="error_msg" class="required"></span>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-primary" id="saveBtn" onclick="makeAppointment()">Proceed</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		var schedule = [];
+		var disabledDays = [];
+
+		$(function () {
+			toggleAppointmentBtn('');
+			$('.alert-success').hide();
+
+			<%if (session.logged_in) { %>
+				$('.alert-danger').hide();
+			<% } else { %>
+				$('.alert-danger').show();
+			<% } %>
+		});
+
+		function listStaff(branch){
+			$('#appointment-btn').attr("disabled", true);
+			$.busyLoadFull("show", {
+				spinner: "circles"
+			});
+
+			$.get("/ajax/listStaffByBranch/<%- companyData.company_name%>/"+branch, function() { 
+				
+			}).done(function(output) {
+				$('#staff').empty();
+				var str = '<option value="">Select a staff</option>';
+				for(var i=0; i<output.length; i++){
+					str += '<option value="'+output[i]._id+'">'+output[i].first_name+' '+output[i].last_name+'</option>';
+				}
+				$('#staff').append(str);
+				$.busyLoadFull("hide");
+			});
+		}
+
+		function toggleAppointmentBtn(staff){
+			$('#appointment-btn').attr("disabled", true);
+			if(staff){
+				<%if (session.logged_in) { %>
+					$('#appointment-btn').attr("disabled", false);
+				<% } %>
+			}
+		}
+
+		function loadStaffSchedule(){
+			$.busyLoadFull("show", {
+				spinner: "circles"
+			});
+
+			var staffId = $('#staff').val();
+			$.get("/ajax/listStaffSchedule/"+staffId, function() { 
+				
+			}).done(function(output) {
+				var len = output.length - 1; console.log(output);
+				disabledDays = output[len].disabled_days;
+
+				var temp = [];
+				for(var i=0; i<=len; i++){
+					temp[output[i].day] = [];
+					temp[output[i].day] = [];
+
+					temp[output[i].day]['start'] = output[i].start_time;
+					temp[output[i].day]['end'] = output[i].end_time;
+				}
+				schedule = temp;
+
+				$('#a_date').datetimepicker({
+					format: 'DD/MM/YYYY',
+					minDate: moment(),
+					daysOfWeekDisabled: disabledDays
+				}); console.log(disabledDays);
+				$('#a_date').on("change.datetimepicker", function (e) {
+					listAvailableTimes();
+				});
+
+				$('#appointmentModal').modal('show');
+				$('#appointment_date').val('');
+				$('#appointment_time').val('');
+
+				$.busyLoadFull("hide");
+			});
+		}
+
+		function listAvailableTimes(){
+			var date = $('#appointment_date').val();
+			var dayOfWeek = $("#a_date").datetimepicker('date')._d.getDay(); //console.log(dayOfWeek);
+
+			if(date!="" && dayOfWeek in schedule){ console.log(date);
+				date = moment(date, 'DD/MM/YYYY').format('YYYY-MM-DD');
+				$.get("/ajax/listStaffAppointment/"+$('#staff').val()+"/"+date, function() { 
+					
+				}).done(function(output) {
+					console.log(output);
+					var times = schedule[dayOfWeek];
+					var start = moment(times['start'], "HH:mm"); //console.log(start);
+					var end = moment(times['end'], "HH:mm");
+
+					$('#appointment_time').empty();
+					var str = "<option value=''>Select time slot</option>";
+					while(start < end){
+						var temp = moment(start).format('HH:mm');
+						var disabled = "";
+						if(output.includes(temp)){
+							disabled = "disabled";
+						}
+						str += "<option value='"+temp+"' "+disabled+">"+temp+"</option>";
+						start = moment(start).add(1, 'hours');
+					}
+					$('#appointment_time').append(str);
+				});
+			}	
+		}
+
+		function makeAppointment(){
+			var date = $('#appointment_date').val();
+			var time =  $('#appointment_time').val();
+			var remarks = $('#appointment_remarks').val();
+
+			$('#error_msg').html('');
+			$('.alert-success').removeClass('show');
+
+			if(date == ''){
+				$('#error_msg').html('Please select a date.');
+				$('#appointment_date').prop('required', true);
+				$('#appointment_date').focus();
+			}else if(time == ''){
+				$('#error_msg').html('Please select a time slot.');
+				$('#appointment_time').prop('required', true);
+				$('#appointment_time').focus();
+			}else if(remarks == ''){
+				$('#error_msg').html('Please enter some remarks.');
+				$('#appointment_remarks').prop('required', true);
+				$('#appointment_remarks').focus();
+			}
+			else{
+				$.busyLoadFull("show", {
+					spinner: "circles"
+				});
+				var data = {_id: '', staff_id: $('#staff').val(), date: date, time: time, remarks: remarks};
+				$.ajax({
+					type: 'POST',
+					data: data,
+					dataType: 'json',
+					url: '/modify/appointment_schedule',						
+					success: function(data) {
+						if(data.success == true){
+							$('#appointmentModal').modal('hide');
+						}else{
+							$('#error_msg').html('Error in saving to database.');
+						}
+						$.busyLoadFull("hide");
+						$('.alert-success').addClass('show');
+						$('.alert-success').show();
+					}
+				});
+			}
+		}
+	</script>
+
+<% include footer %>

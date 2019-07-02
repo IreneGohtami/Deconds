@@ -1,0 +1,195 @@
+<% include header %>
+	
+	<div class="container" style="padding-top:10px; padding-bottom:10px;">
+		<div class="row">
+			<div class="col-sm-12">
+				<h2>Business Account <span class="float-right required d-none d-sm-block" style="font-size:14px; margin-top:15px">* Required fields</span></h2>
+				<div class="mt-4"></div>
+				<form id="form_1" method="post" action="/signup/business" enctype="multipart/form-data">
+					<div class="form-group row">
+						<label for="username" class="col-sm-3 col-form-label">Username <span class="required">*</span></label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="password" class="col-sm-3 col-form-label">Password <span class="required">*</span></label>
+						<div class="col-sm-9">
+							<input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="confirm_password" class="col-sm-3 col-form-label">Confirm Password <span class="required">*</span></label>
+						<div class="col-sm-9">
+							<input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm password" required>
+						</div>
+					</div>
+					<span id="password_error" class="required"></span>
+					<hr>
+					<div class="form-group row">
+						<label for="company_name" class="col-sm-3 col-form-label">Company Name <span class="required">*</span></label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="company_name" name="company_name" placeholder="Company or organization name" required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="industry" class="col-sm-3 col-form-label">Industry <span class="required">*</span></label>
+						<div class="col-sm-9">
+							<select class="form-control" id="industry" name="industry" required>
+								<option value="">Select industry or sector</option>
+								<option value="Medical">Medical</option>
+								<option value="Education">Education</option>
+								<option value="Finance">Finance</option>
+								<option value="e-Commerce">e-Commerce</option>
+								<option value="Entertainment">Entertainment</option>
+								<option value="Vanity">Vanity</option>
+								<option value="Security">Security</option>
+								<option value="Others">Others</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="company_address" class="col-sm-3 col-form-label">Address <span class="required">*</span></label>
+						<div class="col-sm-9">
+							<textarea class="form-control" row="3" id="company_address" name="company_address" placeholder="Company or organization address" style="height:95px;" required></textarea>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="company_phone" class="col-sm-3 col-form-label">Phone <span class="required">*</span></label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="company_phone" name="company_phone" placeholder="Office phone number" required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="customer_enquiry_email" class="col-sm-3 col-form-label">Customer Enquiry Email <span class="required">*</span></label>
+						<div class="col-sm-9">
+							<input type="email" class="form-control" id="customer_enquiry_email" name="customer_enquiry_email" placeholder="Customer enquiry email" required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="company_logo" class="col-sm-3 col-form-label">Logo</label>
+						<div class="col-sm-9 custom-file">
+							<input type="file" class="custom-file-input" id="company_logo" name="company_logo">
+							<label class="custom-file-label" for="company_logo">Choose file</label>
+							<span id="img_error" class="required"></span>
+						</div>
+					</div>
+					<button type="button" onclick="validateForm()" class="btn btn-primary btn-md float-right">SIGNUP</button>
+					<br>
+					<div class="py-5">&nbsp;</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<script>
+		$( document ).ready(function() {
+			//$('[data-toggle="tooltip"]').tooltip(); 
+		});
+		
+		$('#company_logo').on('change',function(){
+			var fileName = $(this).val();
+			$(this).next('.custom-file-label').html(fileName); //replace the "Choose file" label
+		});
+		
+		function validateUsername(str) {
+			var code, i, len;
+			for (i = 0, len = str.length; i < len; i++) {
+				code = str.charCodeAt(i);
+				if (!(code > 47 && code < 58) && // numeric (0-9)
+					!(code > 64 && code < 91) && // upper alpha (A-Z)
+					!(code > 96 && code < 123) && // lower alpha (a-z)
+					code != 95 && code != 46 && code != 45) { // underscore, period, dash
+					return false;
+				}
+			}
+			return true;
+		}
+
+		function validateForm(){
+			$('#password_error').html('');
+			$('#img_error').html('');
+			
+			if($('#username').val() == ''){
+				$('#username').prop('required', true);
+				$('#username').focus();
+				return false;
+			}if(validateUsername($('#username').val()) == false){
+				$('#password_error').html('Username only accepts alphanumeric, underscore, period & dash.');
+				$('#username').prop('required', true);
+				$('#username').focus();
+				return false;
+			}else{ //check for duplicate username
+				$.busyLoadFull("show", {
+					spinner: "circles"
+				});
+				$.get("/checkDuplicateName/users/username/"+$('#username').val(), function() { 
+				
+				}).done(function(output) { //console.log(output);
+					if(output == true){
+						$('#password_error').html('Username already taken.');
+						$('#username').prop('required', true);
+						$('#username').focus();
+						$.busyLoadFull("hide");
+						return false;
+					}
+					else{
+						$.busyLoadFull("hide");
+						if($('#password').val() == ''){
+							$('#password').prop('required', true);
+							$('#password').focus();
+							return false;
+						}if($('#confirm_password').val() == ''){
+							$('#confirm_password').prop('required', true);
+							$('#confirm_password').focus();
+							return false;
+						}if($('#confirm_password').val() != $('#password').val()){
+							$('#password_error').html('Password does not match.');
+							$('#confirm_password').focus();
+							return false;
+						}if($('#company_name').val() == ''){
+							$('#company_name').prop('required', true);
+							$('#company_name').focus();
+							return false;
+						}if($('#industry').val() == ''){
+							$('#industry').prop('required', true);
+							$('#industry').focus();
+							return false;
+						}if($('#company_address').val() == ''){
+							$('#company_address').prop('required', true);
+							$('#company_address').focus();
+							return false;
+						}if($('#company_phone').val() == ''){
+							$('#company_phone').prop('required', true);
+							$('#company_phone').focus();
+							return false;
+						}if($('#customer_enquiry_email').val() == ''){
+							$('#customer_enquiry_email').prop('required', true);
+							$('#customer_enquiry_email').focus();
+							return false;
+						}
+					
+						var image = $('#company_logo');
+						if(image.val() != ""){
+							var checkimg = image.val().toLowerCase();
+							if(!checkimg.match(/(\.jpg|\.png|\.jpeg)$/)){ //validation file extension
+								$('#img_error').html('Invalid file extension. Only jpg, jpeg and png are allowed.');
+								return false;
+							}
+							var fileSize = document.getElementById('company_logo').files[0].size/1024/1024;
+							if(fileSize > 2){ //MB
+								$('#img_error').html('Image size cannot be larger than 2 MB.');
+								return false;
+							}else{
+								$('#form_1').submit();
+							}
+						}else{
+							$('#form_1').submit();
+						}
+					}
+				});
+			}
+		}
+	</script>
+	
+<% include footer %>

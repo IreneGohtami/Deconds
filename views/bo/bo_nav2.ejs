@@ -1,0 +1,38 @@
+<nav id="sidebar" class= "col-md-3 col-lg-2 bg-light sidebar d-none d-md-block">
+	<div class="sidebar-sticky collapse navbar-collapse show" id="navbarSupportedContent">
+		<ul class="nav flex-column">
+			<li class="nav-item">
+				<a class="nav-link <%- page == '/staff_dashboard' ? 'active' : '' %>" href="/staff_dashboard">
+					<span data-feather="home"></span>
+					<span class="nav-min">Dashboard <span class="sr-only">(current)</span></span>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link <%- page == '/working_schedule' ? 'active' : '' %>" href="/working_schedule">
+					<span data-feather="calendar"></span>
+					<span class="nav-min">Working Schedule</span>
+				</a>
+			</li>
+		</ul>
+	</div>
+</nav>
+
+<script>
+	$(document).ready(function(){
+		//on load
+		if($(document).width() < 768){
+			$("#main-div").addClass("pb-2 mb-3 ml-5 pl-1");
+		}else{
+			$("#main-div").addClass("pb-2 mb-3 pl-3");
+		}
+		$(window).on('resize', function(){
+			var win = $(this);
+			$("#main-div").removeClass();
+			if (win.height() < 768){
+				$("#main-div").addClass("pb-2 mb-3 ml-5 pl-1");
+			}else{
+				$("#main-div").addClass("pb-2 mb-3 pl-3");
+			}
+		});
+	});
+</script>
